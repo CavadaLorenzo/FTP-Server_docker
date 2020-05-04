@@ -36,6 +36,11 @@ services:
       - DB_NAME=db0
       - DB_IP=192.168.1.188
       - DB_PORT=8089
+      - POSTGRES_IP = '192.168.1.188'
+      - POSTGRES_PORT = '54320'
+      - POSTGRES_USER = 'admin'
+      - POSTGRES_DB_NAME = 'servers'
+      - POSTGRES_PASSWORD = 'admin'
       - PYTHONUNBUFFERED=1
     volumes:
       - logs:/logviewer/log

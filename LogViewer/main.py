@@ -14,23 +14,24 @@ import os
 import os.path
 from database import Database
 from reader_thread import Reader
+from postgres_database import PostgresDB
 
-"""
+
 DIR = os.environ['LOG_DIR']
 ID = os.environ['ID']
 SERVER_IP = os.environ['SERVER_IP']
 SERVER_PORT = os.environ['SERVER_PORT']
 SSH_PORT = os.environ['SSH_PORT']
-"""
+
 
 # only for debug
-
+"""
 DIR = "./logviewer_env"
 ID = "server1"
 SERVER_IP = "192.168.1.188"
 SERVER_PORT = "3001"
 SSH_PORT = "3022"
-
+"""
 
 def create_thread():
     """
@@ -53,12 +54,17 @@ def create_thread():
 
 def add_info_to_db():
     """
-    This method will add this new server to the measurement which tracks all the FTP servers.
-    Each server will be identify throw is IP and PORT, in the database will also be added
-    the SSH PORT that can be used to copy file to them. 
+    First of all is checkerd if the server's info are already saved in the the database.
+    If not, this method will add this new server to the postgresDB which tracks all the FTP servers.
+    Each server will be identify throw its ID, also its IP, PORT and SSH PORT that can be used to 
+    copy file to them will be added in the database.
     """
-    db = Database()
-    db.add_new_server(SERVER_IP, SERVER_PORT, SSH_PORT, ID)
+    db = PostgresDB()
+    if not db.check_existence_server(ID):
+        db.add_new_server(SERVER_IP, SERVER_PORT, SSH_PORT, ID)
+        print(f"Server: {ID} added in the database")
+    else:
+        print(f"Server: {ID} is already saved in the Database")
 
 def main():
     """
@@ -69,13 +75,11 @@ def main():
 
     add_info_to_db()
 
-    print("Added information of this server to the database")
-"""
     threads = create_thread()
 
     for thread in threads:
         thread.start()
-"""
+
 
 if __name__ == "__main__":
     main()

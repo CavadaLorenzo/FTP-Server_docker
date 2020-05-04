@@ -1,19 +1,17 @@
 from influxdb import InfluxDBClient
 import os
 
-"""
 DB_IP = os.environ['DB_IP']
 DB_PORT = os.environ['DB_PORT']
 DB_NAME = os.environ['DB_NAME']
-"""
+
 
 # only for debug
-
+"""
 DB_IP = "192.168.1.188"
 DB_PORT = "8089"
 DB_NAME = "db0"
-
-
+"""
 
 class Database:
 
