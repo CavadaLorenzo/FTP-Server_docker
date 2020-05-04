@@ -1,0 +1,6 @@
+FROM python
+RUN mkdir logviewer
+WORKDIR /logviewer
+COPY /LogViewer /logviewer
+RUN pip install -r requirements.txt
+CMD ["python", "main.py"]

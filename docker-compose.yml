@@ -1,0 +1,44 @@
+version: '3.7'
+services:
+  server:
+    container_name: ftp-server1
+    image: fauria/vsftpd
+    environment:
+      - FTP_USER=username
+      - FTP_PASS=password
+    ports:
+      - '3000-3001:20-21'
+      - '21200-21210:21100-21110'
+    volumes:
+      - logs:/var/log/
+      - file:/home/vsftpd/username/
+  sidecar:
+    container_name: sidecar-s1
+    build:
+      context: ./
+      dockerfile: sideCarDockerfile
+    volumes:
+      - logs:/var/log/
+      - file:/home/
+    ports:
+      - '3022:22'
+  logviewer:
+    container_name: logviewer1
+    build:
+      context: ./
+      dockerfile: logViewerDockerfile
+    environment:
+      - LOG_DIR=./log/
+      - ID=server1
+      - SERVER_IP=192.168.1.188
+      - SERVER_PORT=3001
+      - SSH_PORT=3022
+      - DB_NAME=db0
+      - DB_IP=192.168.1.188
+      - DB_PORT=8089
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - logs:/logviewer/log
+volumes:
+  logs:
+  file:
