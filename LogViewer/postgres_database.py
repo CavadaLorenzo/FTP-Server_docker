@@ -1,4 +1,4 @@
-import psycopg2
+import psycopg2, os
 
 POSTGRES_IP = os.environ['POSTGRES_IP']
 POSTGRES_PORT = os.environ['POSTGRES_PORT']
