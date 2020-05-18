@@ -10,7 +10,8 @@
 #
 # **STEP ONE:**
 #
-# First thing the script does is search inside a specific directory all the log file that are stored. 
+# First thing the script does is upload the server info like server IP adn PORT to a Postgres database.
+# After that the script will search inside a specific directory all the log file stored inside. 
 # This is done because may be more than one server running at the same time on the same hardware so having a shared directory for the log can help reduce waste. 
 # Each file is then opened, and a dedicated thread object is created and started.
 #
@@ -32,7 +33,7 @@
 #
 # **STEP FIVE:**
 #
-# Now that the request has been parsed the new entry is entered in the influxDB database throw a simple INSERT query. The connection and writing method are managed by an opposite class.
+# Now that the request has been parsed the new entry is entered in the influxDB database throw a simple INSERT query. The connection and writing method are managed by an apposite class.
 #
 #
 #
