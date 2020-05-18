@@ -16,9 +16,8 @@
 #
 # **STEP TWO:**
 #
-# First thing the script does is search inside a specific directory all the log file that are stored. 
-# This is done because may be more than one server running at the same time on the same hardware so having a shared directory for the log can help reduce waste. 
-# Each file is then opened, and a dedicated thread object is created and started.
+# The script will now search for some specific words to determine the format of the log file. 
+# If the file is empty the script will wait untill a new line is added.
 #
 # **STEP THREE:**
 #
