@@ -1,19 +1,20 @@
 import psycopg2, os
 
+"""
 POSTGRES_IP = os.environ['POSTGRES_IP']
 POSTGRES_PORT = os.environ['POSTGRES_PORT']
 POSTGRES_USER = os.environ['POSTGRES_USER']
 POSTGRES_DB_NAME = os.environ['POSTGRES_DB_NAME']
 POSTGRES_PASSWORD = os.environ['POSTGRES_PASSWORD']
-
-# only for debug
 """
+# only for debug
+
 POSTGRES_IP = '192.168.1.188'
 POSTGRES_PORT = '54320'
 POSTGRES_USER = 'admin'
 POSTGRES_DB_NAME = 'servers'
 POSTGRES_PASSWORD = 'admin'
-"""
+
 
 class PostgresDB:
     def __init__(self):
@@ -52,7 +53,7 @@ class PostgresDB:
 
         :param server_id: the id of the new FTP server
         """
-        query = f"SELECT * FROM servers WHERE server_id = \'{server_id}\'"
+        select_all_query = f"SELECT * FROM \"Servers\" WHERE server_name = \'{server_id}\'"
         cursor = self.conn.cursor()
-        cursor.execute(query)
+        cursor.execute(select_all_query)
         return len(cursor.fetchall()) > 0

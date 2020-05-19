@@ -12,49 +12,29 @@
 
 import os
 import os.path
-from database import Database
-from reader_thread import Reader
+from reader import Reader
 from postgres_database import PostgresDB
+import time
 
 
-DIR = os.environ['LOG_DIR']
-ID = os.environ['ID']
-SERVER_IP = os.environ['SERVER_IP']
-SERVER_PORT = os.environ['SERVER_PORT']
-SSH_PORT = os.environ['SSH_PORT']
+# default value is used when KeyError exception is raised
+try:    DIR =  os.environ['LOG_DIR'] 
+except:    DIR = "/home/lorenzo/Desktop/"
+try:    ID = os.environ['ID'] 
+except:    ID = "server1"
+try:    SERVER_IP = os.environ['SERVER_IP'] 
+except:    SERVER_IP = "192.168.1.188"
+try:    SERVER_PORT = os.environ['SERVER_PORT'] 
+except:    SERVER_PORT = "3001"
+try:    SSH_PORT = os.environ['SSH_PORT'] 
+except:    SSH_PORT = "3022"
+try:    LOG_FILE_NAME = os.environ['LOG_FILE_NAME'] 
+except:     LOG_FILE_NAME = "vsftpd.log"
 
-
-# only for debug
-"""
-DIR = "./logviewer_env"
-ID = "server1"
-SERVER_IP = "192.168.1.188"
-SERVER_PORT = "3001"
-SSH_PORT = "3022"
-"""
-
-def create_thread():
-    """
-    This method will create and return an array of thread. Each thread regards a specific
-    log file, the thread will read from the file in real time.
-    Each file is identified by its name and the file itself.
-    """
-    threads = []
-
-    control = True
-    while control:
-        files = ([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])
-        for file_name in files:
-            if file_name == "vsftpd.log":
-                file = (open((DIR + str(file_name)), "r"))
-                threads.append(Reader(ID, file))
-                control = False
-
-    return threads
 
 def add_info_to_db():
     """
-    First of all is checkerd if the server's info are already saved in the the database.
+    First of all is checked if the server's info are already saved in the the database.
     If not, this method will add this new server to the postgresDB which tracks all the FTP servers.
     Each server will be identify throw its ID, also its IP, PORT and SSH PORT that can be used to 
     copy file to them will be added in the database.
@@ -66,19 +46,33 @@ def add_info_to_db():
     else:
         print(f"Server: {ID} is already saved in the Database")
 
+
 def main():
     """
-    Main function of the script, here is where the thread will be launch.
+    Main function of the script, here is where the reader will be launch.
     Here will also be added the information about this FTP server to the database.
+    The log file is searched in the DIR path provided as environment variable. 
+    The default log name is vsftpd.log but can be changed changin the environ variable
+    LOG_FILE_NAME.
     """
     print("Script running and waiting for new entry")
 
     add_info_to_db()
 
-    threads = create_thread()
+    no_file_found = True
+    while no_file_found:
+        if 'file' in locals():
+            no_file_found = False
+        else:
+            files = ([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])
+            for file_name in files:
+                if file_name == LOG_FILE_NAME:
+                    file = (open((DIR + str(file_name)), "r"))
+                    file = Reader(file_name, file)
+            print("No log file, sleeping for 5 seconds")
+            time.sleep(5)
 
-    for thread in threads:
-        thread.start()
+    file.read()
 
 
 if __name__ == "__main__":

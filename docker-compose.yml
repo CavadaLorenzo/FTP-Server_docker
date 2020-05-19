@@ -5,9 +5,9 @@ services:
     build:
       context: ./
       dockerfile: FtpServerDockerfile
-      args:
-        - FTP_USER=username
-        - FTP_PASS=password
+    environment:
+      - FTP_USER=username
+      - FTP_PASS=password
     ports:
       - '3000-3001:20-21'
       - '21200-21210:21100-21110'

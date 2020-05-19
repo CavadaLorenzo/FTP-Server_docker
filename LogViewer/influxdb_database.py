@@ -1,19 +1,15 @@
 from influxdb import InfluxDBClient
 import os
 
-DB_IP = os.environ['DB_IP']
-DB_PORT = os.environ['DB_PORT']
-DB_NAME = os.environ['DB_NAME']
+try: DB_IP = os.environ['DB_IP']
+except: DB_IP = "192.168.1.188"
+try: DB_PORT = os.environ['DB_PORT']
+except: DB_PORT = "8089"
+try: DB_NAME = os.environ['DB_NAME']
+except: DB_NAME = "db0"
 
 
-# only for debug
-"""
-DB_IP = "192.168.1.188"
-DB_PORT = "8089"
-DB_NAME = "db0"
-"""
-
-class Database:
+class InfluxDB_database:
 
     def __init__(self):
         """
@@ -47,6 +43,3 @@ class Database:
         print(result_set)
         for server in result_set:
             print(server)
-        
-        # query = "servers server_ip="' + server_ip + "' AND server_port='" + server_port + "'"
-        # self.db.write([query], {'db': DB_NAME}, 204, 'line')

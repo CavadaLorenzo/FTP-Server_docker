@@ -18,10 +18,14 @@ def get_host_ip(req):
     """
     This method will return the IP in string format (ex. "192.168.1.1")
     """
-    if req[2] == "":
-        return req[7]
+    if req[2] == "":        
+        ip = req[7]
+        ip = ip.split(":")
+        return ip[-1]
     else:
-        return req[6]
+        ip = req[6]
+        ip = ip.split(":")
+        return ip[-1]
 
 
 def get_file(req):

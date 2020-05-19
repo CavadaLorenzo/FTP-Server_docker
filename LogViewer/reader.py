@@ -1,10 +1,9 @@
-import threading
 import time
 from request_xfrl import Request_xfrl
 from request_std import Request_std
 from datetime import timedelta
 from logger import update_log
-from database import Database
+from influxdb_database import InfluxDB_database
 
 r"""Thread which actually read and parse the line of the log file
 
@@ -16,7 +15,7 @@ them to a common InfluxDB database.
 """
 
 
-class Reader(threading.Thread):
+class Reader():
     """
     Represent the file-reader of the system
     Attributes:
@@ -27,16 +26,17 @@ class Reader(threading.Thread):
     def __init__(self, name, file):
         """
         This class will run the reading process from the log file.
-        There are 2 attributes needed:
+        There are 2 parameters needed:
         -name: unique identify of the logviewer instance
         -file: file object where the log are stored
+        An attribute db will also be create, it will represent
+        the connection with the InfluxDB
         """
-        self.db = Database()
-        threading.Thread.__init__(self)
+        self.db = InfluxDB_database()
         self.name = name
         self.file = file
 
-    def run(self):
+    def read(self):
         """
         Main method of the class, first of all it will run the check of the type of the log file
         and then it will run the right request parser.
@@ -54,7 +54,7 @@ class Reader(threading.Thread):
         """
         This method consist in a while True which will constantly check the log file (in xfrelog standard mode to see if
         there is new entry. If not the thread will sleep for 3 seconds, although it will parse the request.
-        Is possible that Kodi will do more than 1 request for the same file. To prevent that the script will save the
+        Is possible that some FTP servers will do more than 1 request for the same file. To prevent that the script will save the
         same request more than once, the last request is saved and is compered with the new one. A request is new
         if is different from the previous one or if is pass at least 10 seconds from the previous one.
         """
@@ -74,7 +74,7 @@ class Reader(threading.Thread):
         """
         This method consist in a while True which will constantly check the log file (in standard mode to see if
         there is new entry. If not the thread will sleep for 3 seconds, although it will parse the request.
-        Is possible that Kodi will do more than 1 request for the same file. To prevent that the script will save the
+        Is possible that some FTP servers will do more than 1 request for the same file. To prevent that the script will save the
         same request more than once, the last request is saved and is compered with the new one. A request is new
         if is different from the previous one or if is pass at least 10 seconds from the previous one.
         """
@@ -92,8 +92,8 @@ class Reader(threading.Thread):
 
     def parse_new_line_xfrl(self, line, old_request):
         """
-        This method will analise the new line of the log file (which is in xferlog standard mode), if a download
-        is found it will, create an object Request_xfrl and add the new request to the database if is a new one.
+        This method will analize the new line of the log file (which is in xferlog standard mode), if a download
+        is found it will create an object Request_xfrl and add the new request to the database if is a new one.
         """
         line = line.split(" ")
         if line[len(line) - 1] == "c\n" or line[len(line) - 1] == "c":
