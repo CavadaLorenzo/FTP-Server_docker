@@ -1,20 +1,17 @@
 import psycopg2, os
 
-"""
-POSTGRES_IP = os.environ['POSTGRES_IP']
-POSTGRES_PORT = os.environ['POSTGRES_PORT']
-POSTGRES_USER = os.environ['POSTGRES_USER']
-POSTGRES_DB_NAME = os.environ['POSTGRES_DB_NAME']
-POSTGRES_PASSWORD = os.environ['POSTGRES_PASSWORD']
-"""
-# only for debug
 
-POSTGRES_IP = '192.168.1.188'
-POSTGRES_PORT = '54320'
-POSTGRES_USER = 'admin'
-POSTGRES_DB_NAME = 'servers'
-POSTGRES_PASSWORD = 'admin'
-
+# default value is used when KeyError exception is raised
+try:    POSTGRES_IP =  os.environ['POSTGRES_IP'] 
+except:    POSTGRES_IP = '192.168.1.188'
+try:    POSTGRES_PORT = os.environ['POSTGRES_PORT'] 
+except:    POSTGRES_PORT = '54320'
+try:    POSTGRES_USER = os.environ['POSTGRES_USER'] 
+except:    POSTGRES_USER = 'admin'
+try:    POSTGRES_DB_NAME = os.environ['POSTGRES_DB_NAME'] 
+except:    POSTGRES_DB_NAME = 'servers'
+try:    POSTGRES_PASSWORD = os.environ['POSTGRES_PASSWORD'] 
+except:    POSTGRES_PASSWORD = 'POSTGRES_PASSWORD'
 
 class PostgresDB:
     def __init__(self):
