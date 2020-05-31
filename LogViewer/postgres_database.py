@@ -11,7 +11,7 @@ except:    POSTGRES_USER = 'admin'
 try:    POSTGRES_DB_NAME = os.environ['POSTGRES_DB_NAME'] 
 except:    POSTGRES_DB_NAME = 'servers'
 try:    POSTGRES_PASSWORD = os.environ['POSTGRES_PASSWORD'] 
-except:    POSTGRES_PASSWORD = 'POSTGRES_PASSWORD'
+except:    POSTGRES_PASSWORD = 'admin'
 
 class PostgresDB:
     def __init__(self):
@@ -39,9 +39,11 @@ class PostgresDB:
         :param ssh_port: is the SSH port used to move file to the FTP server
         :param server_id: is the unique id which identify each FTP server
         """
-        query  = f'INSERT INTO servers(server_id, server_ip, server_port, server_ssh_port) VALUES (\'{server_id}\', \'{server_ip}\', \'{server_port}\', \'{ssh_port}\')'
+        query  = f'INSERT INTO \"Servers\"(id, server_name, server_ip, server_port, server_ssh_port) VALUES (\'{server_id}\', \'{server_id}\', \'{server_ip}\', \'{server_port}\', \'{ssh_port}\')'
+        print(query)
         cursor = self.conn.cursor()
         cursor.execute(query)
+        self.conn.commit()
 
     def check_existence_server(self, server_id):
         """
