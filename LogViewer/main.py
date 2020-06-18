@@ -68,7 +68,7 @@ def main():
             for file_name in files:
                 if file_name == LOG_FILE_NAME:
                     file = (open((DIR + str(file_name)), "r"))
-                    file = Reader(file_name, file)
+                    file = Reader(ID, file)
             print("No log file, sleeping for 5 seconds")
             time.sleep(5)
 

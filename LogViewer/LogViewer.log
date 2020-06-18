@@ -2,6 +2,7 @@ READING FROM FILE vsftpd.log
 READING FROM FILE vsftpd.log
 READING FROM FILE vsftpd.log
 READING FROM FILE vsftpd.log
+<<<<<<< HEAD
 PARSED REQUEST RECEIVED AT: vsftpd.log
 {
     "date": "2020-06-17 15:21:57",
@@ -125,4 +126,6 @@ READING FROM FILE vsftpd.log
 READING FROM FILE vsftpd.log
 READING FROM FILE vsftpd.log
 READING FROM FILE vsftpd.log
+=======
+>>>>>>> 06d9cd6faddbbfd603f59caf6ef853cc33f85d7b
 READING FROM FILE vsftpd.log

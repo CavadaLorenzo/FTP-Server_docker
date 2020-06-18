@@ -28,18 +28,3 @@ class InfluxDB_database:
             "file_path"] + "\",logviewer_id=\"" + name + "\"" + ",username=\"" + req.req_json["username"] + "\""
 
         self.db.write([query], {'db': DB_NAME}, 204, 'line')
-
-    def add_new_server(self, server_ip, server_port, ssh_port, server_id):
-        """
-        This method will store into the influxDB the new server.
-        The new server will be identify by its IP and its PORT.
-        It will be stored also the SSH PORT used to move file into them.
-        First of all the script will checkl if the server is already in the database,
-        in this case will delete the old entry and upload the new one.
-        """
-        query = "DROP SERIES FROM servers WHERE server_ip='" + server_ip + "' AND server_port='" + server_port + "' AND ssh_port='" + ssh_port + "' AND server_id='" + server_id + "'"
-        print(query)
-        result_set = self.db.query(query).get_points(measurement='servers')
-        print(result_set)
-        for server in result_set:
-            print(server)
