@@ -73,7 +73,6 @@ def parse_date(req_date):
     """
     This method will elaborate the req_date an will return a normal date format (datetime)
     """
-    print(req_date)
     # here will be build a date in this format: year, month (in number), day (in number)
     if req_date[2] == "":
         date = [req_date[5], get_month(req_date[1]), req_date[3]]
@@ -109,7 +108,6 @@ class Request_xfrl:
         - username: which represents the username of the client
         - reqJson: which is a JSON with all this three information stored
         """
-        print(req)
         self.file = get_file(req)  # file path requested from the client
         self.host = get_host_ip(req)  # ip of the client
         self.date = parse_date(req)  # date and hour when the request has been processed

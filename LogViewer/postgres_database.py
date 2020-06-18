@@ -1,9 +1,9 @@
-import psycopg2, os
+import psycopg2, os, uuid
 
 
 # default value is used when KeyError exception is raised
 try:    POSTGRES_IP =  os.environ['POSTGRES_IP'] 
-except:    POSTGRES_IP = '192.168.1.188'
+except:    POSTGRES_IP = '192.168.1.190'
 try:    POSTGRES_PORT = os.environ['POSTGRES_PORT'] 
 except:    POSTGRES_PORT = '54320'
 try:    POSTGRES_USER = os.environ['POSTGRES_USER'] 
@@ -11,7 +11,7 @@ except:    POSTGRES_USER = 'admin'
 try:    POSTGRES_DB_NAME = os.environ['POSTGRES_DB_NAME'] 
 except:    POSTGRES_DB_NAME = 'servers'
 try:    POSTGRES_PASSWORD = os.environ['POSTGRES_PASSWORD'] 
-except:    POSTGRES_PASSWORD = 'POSTGRES_PASSWORD'
+except:    POSTGRES_PASSWORD = 'admin'
 
 class PostgresDB:
     def __init__(self):
@@ -39,9 +39,10 @@ class PostgresDB:
         :param ssh_port: is the SSH port used to move file to the FTP server
         :param server_id: is the unique id which identify each FTP server
         """
-        query  = f'INSERT INTO servers(server_id, server_ip, server_port, server_ssh_port) VALUES (\'{server_id}\', \'{server_ip}\', \'{server_port}\', \'{ssh_port}\')'
+        query  = f'INSERT INTO \"Servers\"(id, server_name, server_ip, server_port, server_ssh_port) VALUES (\'{server_id}\', \'{server_id}\', \'{server_ip}\', \'{server_port}\', \'{ssh_port}\')'
         cursor = self.conn.cursor()
         cursor.execute(query)
+        self.conn.commit() 
 
     def check_existence_server(self, server_id):
         """
@@ -53,4 +54,11 @@ class PostgresDB:
         select_all_query = f"SELECT * FROM \"Servers\" WHERE server_name = \'{server_id}\'"
         cursor = self.conn.cursor()
         cursor.execute(select_all_query)
+        self.conn.commit() 
         return len(cursor.fetchall()) > 0
+
+    def add_new_file(self, new_file, server_id):
+        query  = f'INSERT INTO \"File_list\"(id, server_id, filename, upload_date) VALUES (\'{uuid.uuid1()}\', \'{server_id}\', \'{new_file.req_json["file_path"]}\', \'{new_file.req_json["date"]}\')'
+        cursor = self.conn.cursor()
+        cursor.execute(query)
+        self.conn.commit() 

@@ -32,13 +32,13 @@ services:
     environment:
       - LOG_DIR=./log/
       - ID=server1
-      - SERVER_IP=192.168.1.188
+      - SERVER_IP=192.168.1.90
       - SERVER_PORT=3001
       - SSH_PORT=3022
       - DB_NAME=db0
-      - DB_IP=192.168.1.188
+      - DB_IP=192.168.1.190
       - DB_PORT=8089
-      - POSTGRES_IP=192.168.1.188
+      - POSTGRES_IP=192.168.1.190
       - POSTGRES_PORT=54320
       - POSTGRES_USER=admin
       - POSTGRES_DB_NAME=servers

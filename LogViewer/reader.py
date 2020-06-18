@@ -3,7 +3,9 @@ from request_xfrl import Request_xfrl
 from request_std import Request_std
 from datetime import timedelta
 from logger import update_log
+from upload_std import Upload_file
 from influxdb_database import InfluxDB_database
+from postgres_database import PostgresDB
 
 r"""Thread which actually read and parse the line of the log file
 
@@ -14,6 +16,8 @@ them to a common InfluxDB database.
 
 """
 
+try:    ID = os.environ['ID'] 
+except:    ID = "server1"
 
 class Reader():
     """
@@ -33,6 +37,7 @@ class Reader():
         the connection with the InfluxDB
         """
         self.db = InfluxDB_database()
+        self.postgres_db = PostgresDB()
         self.name = name
         self.file = file
 
@@ -96,7 +101,7 @@ class Reader():
         is found it will create an object Request_xfrl and add the new request to the database if is a new one.
         """
         line = line.split(" ")
-        if line[len(line) - 1] == "c\n" or line[len(line) - 1] == "c":
+        if line[11] == "o":
             request = Request_xfrl(line)
             if request.req_json["file_path"] != old_request.req_json["file_path"] or request.req_json["date"] > (
                     old_request.req_json["date"] + timedelta(seconds=10)):
@@ -104,6 +109,11 @@ class Reader():
                 update_log(text="PARSED REQUEST RECEIVED AT: " + self.name + "\n" + str(request))
                 self.db.add_request_database(self.name, request)
                 old_request = request
+        if line[11] == "i":
+            new_file = Request_xfrl(line)
+            self.postgres_db.add_new_file(new_file, ID)
+
+
         return old_request
 
     def parse_new_line_std(self, line, old_request):
@@ -120,6 +130,11 @@ class Reader():
                 update_log(text="PARSED REQUEST RECEIVED AT: " + self.name + "\n" + str(request))
                 self.db.add_request_database(self.name, request)
                 old_request = request
+        if "OK UPLOAD" in line:
+            line = line.split("\"")
+            new_file = Request_std(line)
+            self.postgres_db.add_new_file(new_file, ID)
+
         return old_request
 
     def check_log_type(self):

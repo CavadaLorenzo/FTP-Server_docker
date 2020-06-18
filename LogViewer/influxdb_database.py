@@ -2,7 +2,7 @@ from influxdb import InfluxDBClient
 import os
 
 try: DB_IP = os.environ['DB_IP']
-except: DB_IP = "192.168.1.188"
+except: DB_IP = "192.168.1.190"
 try: DB_PORT = os.environ['DB_PORT']
 except: DB_PORT = "8089"
 try: DB_NAME = os.environ['DB_NAME']
